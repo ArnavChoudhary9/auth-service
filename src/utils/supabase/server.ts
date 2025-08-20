@@ -14,9 +14,16 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
+            cookiesToSet.forEach(({ name, value, options }) => {
+              // Modify cookie options to work across subdomains
+              const cookieOptions = {
+                ...options,
+                domain: process.env.COOKIE_DOMAIN || '.arnavchoudhary.com', // Set to your root domain with leading dot
+                secure: true, // Required for cross-subdomain cookies
+                sameSite: 'lax' as const // or 'none' if cross-site requests needed
+              }
+              cookieStore.set(name, value, cookieOptions)
+            })
           } catch {
             // The `setAll` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing
