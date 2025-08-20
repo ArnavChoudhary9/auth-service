@@ -12,11 +12,11 @@ export default async function login(formData: FormData) {
   const password = formData.get('password')
 
   if (!email || !password) {
-    redirect(`/auth/login?error=${encodeURIComponent("Email and password are required")}`)
+    redirect(`/login?error=${encodeURIComponent("Email and password are required")}`)
   }
 
   if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
-    redirect(`/auth/login?error=${encodeURIComponent("Invalid email or password")}`)
+    redirect(`/login?error=${encodeURIComponent("Invalid email or password")}`)
   }
   
   const data = {
@@ -27,7 +27,7 @@ export default async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect(`/auth/login?error=${encodeURIComponent(error.message)}`)
+    redirect(`/login?error=${encodeURIComponent(error.message)}`)
   }
 
   revalidatePath('/private', 'layout')

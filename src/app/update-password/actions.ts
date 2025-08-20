@@ -37,7 +37,7 @@ import { redirect } from 'next/navigation';
 //     if (error) throw error;
 
 //     // Redirect to login page after successful password update
-//     router.push("/auth/login");
+//     router.push("/login");
 //   } catch (error: unknown) {
 //     setError(error instanceof Error ? error.message : "An error occurred");
 //   } finally {
@@ -56,15 +56,15 @@ export default async function handleUpdatePassword(formData: FormData) {
   const type = url.searchParams.get("type") as EmailOtpType;
 
   if (!newPassword || !repeatPassword) {
-    redirect(`/auth/update-password?error=${encodeURIComponent("New password and repeat password are required")}`);
+    redirect(`/update-password?error=${encodeURIComponent("New password and repeat password are required")}`);
   }
 
   if (!token_hash || !type) {
-    redirect(`/auth/update-password?error=${encodeURIComponent("Invalid token or type")}`);
+    redirect(`/update-password?error=${encodeURIComponent("Invalid token or type")}`);
   }
 
   if (repeatPassword !== newPassword) {
-    redirect(`/auth/update-password?error=${encodeURIComponent("Passwords do not match")}`);
+    redirect(`/update-password?error=${encodeURIComponent("Passwords do not match")}`);
   }
 
   const { error: verifyError } = await supabase.auth.verifyOtp({
@@ -72,7 +72,7 @@ export default async function handleUpdatePassword(formData: FormData) {
     token_hash
   });
   if (verifyError) {
-    redirect(`/auth/update-password?error=${encodeURIComponent(verifyError.message)}`);
+    redirect(`/update-password?error=${encodeURIComponent(verifyError.message)}`);
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -80,8 +80,8 @@ export default async function handleUpdatePassword(formData: FormData) {
   });
 
   if (error) {
-    redirect(`/auth/update-password?error=${encodeURIComponent(error.message)}`);
+    redirect(`/update-password?error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect(`/auth/login?msg=${encodeURIComponent("Password updated successfully")}`);
+  redirect(`/login?msg=${encodeURIComponent("Password updated successfully")}`);
 }

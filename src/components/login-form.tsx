@@ -31,6 +31,7 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const error = searchParams.get('error');
   const success = searchParams.get('msg');
 
@@ -69,7 +70,7 @@ export function LoginForm({
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
-                    href="/auth/forgot-password"
+                    href="/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
@@ -100,7 +101,7 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/auth/signup" className="underline underline-offset-4">
+              <Link href="/signup" className="underline underline-offset-4">
                 Sign up
               </Link>
             </div>

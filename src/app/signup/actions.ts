@@ -13,31 +13,31 @@ export default async function signup(formData: FormData) {
   const confirmPassword = formData.get('confirmPassword');
 
   if (!email || !password || !confirmPassword) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Email, password, and confirm password are required')}`);
+    redirect(`/signup?error=${encodeURIComponent('Email, password, and confirm password are required')}`);
   }
 
   if (typeof email !== 'string' || typeof password !== 'string' || typeof confirmPassword !== 'string' || !email || !password || !confirmPassword) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Invalid email, password, or confirm password')}`);
+    redirect(`/signup?error=${encodeURIComponent('Invalid email, password, or confirm password')}`);
   }
  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Invalid email format')}`);
+    redirect(`/signup?error=${encodeURIComponent('Invalid email format')}`);
   }
 
   if (password.length < 8) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Password must be at least 8 characters long')}`);
+    redirect(`/signup?error=${encodeURIComponent('Password must be at least 8 characters long')}`);
   }
 
   const hasLetter = /[a-zA-Z]/.test(password);
   const hasNumber = /\d/.test(password);
 
   if (!hasLetter || !hasNumber) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Password must contain both letters and numbers')}`);
+    redirect(`/signup?error=${encodeURIComponent('Password must contain both letters and numbers')}`);
   }
 
   if (password !== confirmPassword) {
-    redirect(`/auth/signup?error=${encodeURIComponent('Passwords do not match')}`);
+    redirect(`/signup?error=${encodeURIComponent('Passwords do not match')}`);
   }
 
   const data = {
@@ -48,9 +48,9 @@ export default async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
-    redirect(`/auth/signup?error=${encodeURIComponent(error.message)}`)
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`)
   }
 
   revalidatePath('/signup', 'layout')
-  redirect(`/auth/signup?msg=${encodeURIComponent('Check your email for the confirmation link')}`)
+  redirect(`/signup?msg=${encodeURIComponent('Check your email for the confirmation link')}`)
 }
