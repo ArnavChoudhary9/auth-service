@@ -31,13 +31,14 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect');
+  const redirectTo = searchParams.get('redirect');
   const error = searchParams.get('error');
   const success = searchParams.get('msg');
 
   const handleSubmit = async (formData: FormData) => {
     setLoading(true);
     try {
+      formData.append('redirect', redirectTo || '/private');
       await handleLogin(formData);
     } catch {
       setLoading(false);

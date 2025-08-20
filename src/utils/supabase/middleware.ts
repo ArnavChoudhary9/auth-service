@@ -50,6 +50,21 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // If user exists and is on login page, redirect to appropriate page
+  if (user && request.nextUrl.pathname.startsWith('/login')) {
+    const redirectTo = request.nextUrl.searchParams.get('redirect')
+    if (redirectTo) {
+      // Redirect to the absolute URL specified in the redirect parameter
+      return NextResponse.redirect(redirectTo)
+    } else {
+      // Default redirect to /private on the same domain
+      const url = request.nextUrl.clone()
+      url.pathname = '/private'
+      url.search = ''
+      return NextResponse.redirect(url)
+    }
+  }
+
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:

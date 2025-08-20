@@ -1,15 +1,14 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
 import { createClient } from '@/utils/supabase/server'
 
 export default async function login(formData: FormData) {
   const supabase = await createClient()
 
-  const email = formData.get('email')
+  const email = formData.get('email');
   const password = formData.get('password')
+  const redirectTo = formData.get('redirect') as string;
 
   if (!email || !password) {
     redirect(`/login?error=${encodeURIComponent("Email and password are required")}`)
@@ -30,6 +29,5 @@ export default async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`)
   }
 
-  revalidatePath('/private', 'layout')
-  redirect('/private')
+  redirect(redirectTo)
 }
