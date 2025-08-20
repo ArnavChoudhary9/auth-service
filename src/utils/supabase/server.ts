@@ -18,7 +18,7 @@ export async function createClient() {
               // Modify cookie options to work across subdomains
               const cookieOptions = {
                 ...options,
-                domain: process.env.COOKIE_DOMAIN || '.arnavchoudhary.com', // Set to your root domain with leading dot
+                domain: process.env.COOKIE_DOMAIN, // Set to your root domain with leading dot
                 secure: true, // Required for cross-subdomain cookies
                 sameSite: 'lax' as const // or 'none' if cross-site requests needed
               }
