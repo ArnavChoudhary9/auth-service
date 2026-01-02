@@ -20,31 +20,37 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
-import Link from "next/link";
 
-export function LoginForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
 
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
     });
 
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Login successful");
+      toast.success("Verification email sent! Please check your inbox.");
     }
 
     setIsLoading(false);
@@ -54,9 +60,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Create an account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to create your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,15 +80,7 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
                   id="password"
                   type="password"
@@ -92,14 +90,23 @@ export function LoginForm({
                 />
               </Field>
               <Field>
+                <FieldLabel htmlFor="confirmPassword">
+                  Confirm Password
+                </FieldLabel>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </Field>
+              <Field>
                 <Button type="submit" disabled={isLoading}>
-                  {isLoading ? <Spinner /> : "Login"}
-                </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
+                  {isLoading ? <Spinner /> : "Sign Up"}
                 </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link href="/auth/signup">Sign up</Link>
+                  Already have an account? <a href="/auth/login">Login</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
