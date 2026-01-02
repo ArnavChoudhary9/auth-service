@@ -20,21 +20,18 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
-
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 export function SignupForm({
   className,
+  error,
   ...props
-}: React.ComponentProps<"div">) {
-  const searchParams = useSearchParams();
+}: React.ComponentProps<"div"> & { error?: string }) {
   useEffect(() => {
-    const error = searchParams.get("error");
     if (error) {
       toast.error(error);
     }
-  }, [searchParams]);
+  }, [error]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
