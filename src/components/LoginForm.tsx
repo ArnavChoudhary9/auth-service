@@ -20,12 +20,15 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +47,7 @@ export function LoginForm({
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Login successful");
+      router.push('/user');
     }
 
     setIsLoading(false);
