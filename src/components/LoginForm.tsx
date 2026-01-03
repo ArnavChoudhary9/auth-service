@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,19 +16,37 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
 import { useRouter } from "next/navigation";
 import { FcGoogle as GoogleIcon } from "react-icons/fc";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
 export function LoginForm({
   className,
+  error,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { error?: string }) {
   const router = useRouter();
+  
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -99,9 +117,53 @@ export function LoginForm({
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? <Spinner /> : "Login"}
                 </Button>
-                <Button variant="outline" type="button" disabled>
-                  Login with <GoogleIcon />
-                </Button>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-block w-full">
+                        <Button
+                          variant="outline"
+                          type="button"
+                          disabled
+                          className="w-full"
+                        >
+                          Login with <GoogleIcon />
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Currently a work in progress</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Popover>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" type="button">
+                            <MoreHorizontal />
+                          </Button>
+                        </PopoverTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>More Login Methods</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <PopoverContent className="w-80">
+                      <Link href="/auth/login/magic-link">
+                        <Button
+                          variant="outline"
+                          type="button"
+                          className="w-full"
+                        >
+                          Magic Link (Email)
+                        </Button>
+                      </Link>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
                   <Link href="/auth/signup">Sign up</Link>

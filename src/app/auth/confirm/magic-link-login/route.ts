@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
     if (!error) {
       redirect(next);
     } else {
-      redirect(`/auth/signup?error=${error?.message || "Verification failed"}`);
+      redirect(`/auth/login?error=${error?.message || "Magic link failed"}`);
     }
   }
 
-  redirect('/auth/signup?error=Invalid%20or%20expired%20link');
+  redirect('/auth/login?error=Invalid%20or%20expired%20link');
 }

@@ -15,9 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
-import Link from "next/link";
 
-export function ForgotPasswordForm({
+export function MagicLinkForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -30,12 +29,12 @@ export function ForgotPasswordForm({
 
     const supabase = createClient();
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Password reset email sent!");
+      toast.success("Magic link sent to your email!");
     }
 
     setIsLoading(false);
@@ -45,10 +44,10 @@ export function ForgotPasswordForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Reset your password</CardTitle>
+          <CardTitle>Login using Magic Link</CardTitle>
           <CardDescription>
-            Enter your email below to reset your password. You can also login
-            using a magic link if you prefer not to reset it.
+            Enter your email below to login using a magic link.
+            You will automatically signed-up if you don&apos;t have an account.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -67,14 +66,8 @@ export function ForgotPasswordForm({
               </Field>
               <Field>
                 <Button type="submit" disabled={isLoading}>
-                  {isLoading ? <Spinner /> : "Reset Password"}
+                  {isLoading ? <Spinner /> : "Send Magic Link"}
                 </Button>
-
-                <Link href="/auth/login/magic-link">
-                  <Button variant="outline" type="button" className="w-full">
-                    Login using Magic Link
-                  </Button>
-                </Link>
               </Field>
             </FieldGroup>
           </form>

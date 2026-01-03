@@ -21,6 +21,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export function SignupForm({
   className,
@@ -113,6 +114,11 @@ export function SignupForm({
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? <Spinner /> : "Sign Up"}
                 </Button>
+                <Link href="/auth/login/magic-link">
+                  <Button variant="outline" type="button" className="w-full">
+                    Sign Up With Magic Link (Email)
+                  </Button>
+                </Link>
                 <FieldDescription className="text-center">
                   Already have an account? <a href="/auth/login">Login</a>
                 </FieldDescription>
