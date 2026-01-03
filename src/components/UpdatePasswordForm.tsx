@@ -16,15 +16,15 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/subabase/client";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 export function UpdatePasswordForm({
   className,
+  tokenHash,
+  type,
   ...props
-}: React.ComponentProps<"div"> & { error?: string }) {
+}: React.ComponentProps<"div"> & { tokenHash?: string; type?: EmailOtpType }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,9 +39,6 @@ export function UpdatePasswordForm({
       setIsLoading(false);
       return;
     }
-
-    const tokenHash = searchParams.get("token_hash");
-    const type = searchParams.get("type") as EmailOtpType | null;
 
     if (!tokenHash || !type) {
       toast.error("Invalid or missing token");

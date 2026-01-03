@@ -21,6 +21,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/lib/subabase/client";
 import { useRouter } from "next/navigation";
+import { FcGoogle as GoogleIcon } from "react-icons/fc";
 import Link from "next/link";
 
 export function LoginForm({
@@ -98,8 +99,8 @@ export function LoginForm({
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? <Spinner /> : "Login"}
                 </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
+                <Button variant="outline" type="button" disabled>
+                  Login with <GoogleIcon />
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
