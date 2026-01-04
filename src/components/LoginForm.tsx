@@ -29,18 +29,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
-import { createClient } from "@/lib/subabase/client";
-import { useRouter } from "next/navigation";
 import { FcGoogle as GoogleIcon } from "react-icons/fc";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import { login } from "@/app/auth/actions";
 
 export function LoginForm({
   className,
   error,
   ...props
 }: React.ComponentProps<"div"> & { error?: string }) {
-  const router = useRouter();
   
   useEffect(() => {
     if (error) {
@@ -52,24 +50,18 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
 
-    const supabase = createClient();
+    const result = await login(email, password);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      router.push("/user");
+    if (result?.error) {
+      toast.error(result.error);
+      setIsLoading(false);
+    } else if (result?.success) {
+      window.location.href = "/user";
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -82,7 +74,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>

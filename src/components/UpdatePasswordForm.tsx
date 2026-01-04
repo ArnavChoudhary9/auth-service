@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { type EmailOtpType } from "@supabase/supabase-js";
-import { createClient } from "@/lib/subabase/client";
 import { useRouter } from "next/navigation";
+import { verifyOtpAndUpdatePassword } from "@/app/auth/actions";
 
 export function UpdatePasswordForm({
   className,
@@ -46,32 +46,17 @@ export function UpdatePasswordForm({
       return;
     }
 
-    const supabase = createClient();
+    const result = await verifyOtpAndUpdatePassword(tokenHash, type, password);
 
-    const { error } = await supabase.auth.verifyOtp({
-      type,
-      token_hash: tokenHash,
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setIsLoading(false);
-      return;
-    }
-
-    const { error: updateError } = await supabase.auth.updateUser({
-      password,
-    });
-
-    if (updateError) {
-      toast.error(updateError.message);
+    if (result?.error) {
+      toast.error(result.error);
       setIsLoading(false);
       return;
     }
 
     toast.success("Password updated successfully");
     setIsLoading(false);
-    router.push("/login");
+    router.push("/user");
   };
 
   return (

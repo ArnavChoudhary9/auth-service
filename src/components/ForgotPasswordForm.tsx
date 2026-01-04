@@ -14,8 +14,8 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
-import { createClient } from "@/lib/subabase/client";
 import Link from "next/link";
+import { resetPassword } from "@/app/auth/actions";
 
 export function ForgotPasswordForm({
   className,
@@ -28,12 +28,10 @@ export function ForgotPasswordForm({
     event.preventDefault();
     setIsLoading(true);
 
-    const supabase = createClient();
+    const result = await resetPassword(email);
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      toast.error(error.message);
+    if (result?.error) {
+      toast.error(result.error);
     } else {
       toast.success("Password reset email sent!");
     }

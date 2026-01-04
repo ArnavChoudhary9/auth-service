@@ -19,9 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
-import { createClient } from "@/lib/subabase/client";
 import { useEffect } from "react";
 import Link from "next/link";
+import { signup } from "@/app/auth/actions";
 
 export function SignupForm({
   className,
@@ -49,15 +49,10 @@ export function SignupForm({
       return;
     }
 
-    const supabase = createClient();
+    const result = await signup(email, password);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message);
+    if (result?.error) {
+      toast.error(result.error);
     } else {
       toast.success("Verification email sent! Please check your inbox.");
     }
