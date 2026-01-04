@@ -14,17 +14,14 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            const cookieDomain =
-              process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost";
+            const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
 
             cookiesToSet.forEach(({ name, value, options }) => {
               const cookieOptions = {
+                ...options,
                 domain: cookieDomain,
                 secure: true,
                 sameSite: "lax" as const,
-                httpOnly: options.httpOnly,
-                maxAge: options.maxAge,
-                path: options.path || "/",
               };
               cookieStore.set(name, value, cookieOptions);
             });
