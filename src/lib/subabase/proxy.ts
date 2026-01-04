@@ -17,7 +17,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+          const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "localhost";
 
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
@@ -29,10 +29,12 @@ export async function updateSession(request: NextRequest) {
 
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieOptions = {
-              ...options,
               domain: cookieDomain,
               secure: true, // Required for cross-subdomain cookies
               sameSite: "lax" as const, // or 'none' if cross-site requests needed
+              httpOnly: options.httpOnly,
+              maxAge: options.maxAge,
+              path: options.path || "/",
             };
             supabaseResponse.cookies.set(name, value, cookieOptions);
           });

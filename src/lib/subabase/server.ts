@@ -19,10 +19,12 @@ export async function createClient() {
 
             cookiesToSet.forEach(({ name, value, options }) => {
               const cookieOptions = {
-                ...options,
                 domain: cookieDomain,
                 secure: true,
                 sameSite: "lax" as const,
+                httpOnly: options.httpOnly,
+                maxAge: options.maxAge,
+                path: options.path || "/",
               };
               cookieStore.set(name, value, cookieOptions);
             });
