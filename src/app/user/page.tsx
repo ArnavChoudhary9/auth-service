@@ -1,8 +1,11 @@
-export default function User() {
+import ProfileHeader from "@/components/ProfileHeader";
+import ProfileContent from "@/components/ProfileContent";
+
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-4xl font-bold p-4">You have successfully signed up!</h1>
-      <p>Continue using *.arnavchoudhary.com websites</p>
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-10">
+      <ProfileHeader />
+      <ProfileContent />
     </div>
   );
 }
