@@ -45,26 +45,6 @@ export default function ProfileContent() {
                 <Label htmlFor="lastName">Last Name</Label>
                 <Input id="lastName" defaultValue="Doe" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  defaultValue="john.doe@example.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" defaultValue="+1 (555) 123-4567" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input id="jobTitle" defaultValue="Senior Product Designer" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
-                <Input id="company" defaultValue="Acme Inc." />
-              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="bio">Bio</Label>
