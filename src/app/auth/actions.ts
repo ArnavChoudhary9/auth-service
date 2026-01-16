@@ -109,3 +109,24 @@ export async function verifyOtpAndUpdatePassword(
 
   return { success: true };
 }
+
+export async function githubLogin() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/confirm/oauth/`,
+    },
+  });
+
+  if (data.url) {
+    redirect(data.url); // use the redirect API for your server framework
+  }
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}

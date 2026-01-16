@@ -30,21 +30,24 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { FcGoogle as GoogleIcon } from "react-icons/fc";
+import { FaGithub as GithubIcon } from "react-icons/fa";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { login } from "@/app/auth/actions";
+import { login, githubLogin } from "@/app/auth/actions";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
   error,
   ...props
 }: React.ComponentProps<"div"> & { error?: string }) {
-  
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
   }, [error]);
+
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,7 +63,20 @@ export function LoginForm({
       toast.error(result.error);
       setIsLoading(false);
     } else if (result?.success) {
-      window.location.href = "/user";
+      router.push("/user");
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    setIsLoading(true);
+
+    const result = await githubLogin();
+
+    if (result?.error) {
+      toast.error(result.error);
+      setIsLoading(false);
+    } else if (result?.success) {
+      router.push("/user");
     }
   };
 
@@ -117,7 +133,7 @@ export function LoginForm({
                         <Button
                           variant="outline"
                           type="button"
-                          disabled
+                          disabled={true || isLoading}
                           className="w-full"
                         >
                           Login with <GoogleIcon />
@@ -129,11 +145,26 @@ export function LoginForm({
                     </TooltipContent>
                   </Tooltip>
 
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                    disabled={isLoading}
+                    onClick={handleGithubLogin}
+                  >
+                    Login with <GithubIcon />
+                  </Button>
+
                   <Popover>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" type="button">
+                          <Button
+                            variant="outline"
+                            type="button"
+                            disabled={isLoading}
+                            className="col-span-2 w-full"
+                          >
                             <MoreHorizontal />
                           </Button>
                         </PopoverTrigger>
